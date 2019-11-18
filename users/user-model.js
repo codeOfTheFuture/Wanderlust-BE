@@ -5,6 +5,7 @@ module.exports = {
   findGuideBy,
   addGuide,
   findGuideById,
+  updateGuide,
   findTouristBy,
 };
 
@@ -48,4 +49,10 @@ function findGuideById(id) {
 
 function findTouristBy(filter) {
   return db('tourists').where(filter);
+}
+
+function updateGuide(id, changes) {
+  return db('guides')
+    .where({ id })
+    .update(changes);
 }
