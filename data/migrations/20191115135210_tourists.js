@@ -18,6 +18,10 @@ exports.up = function(knex) {
     tourists.string('lastname', 255);
 
     tourists.string('phonenumber');
+
+    tourists.string('profilepicture', 255).unique();
+
+    tourists.string('bannerpicture', 255).unique();
   });
 };
 

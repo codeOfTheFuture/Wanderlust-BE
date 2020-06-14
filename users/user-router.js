@@ -1,60 +1,43 @@
-const router = require('express').Router();
-const User = require('./user-model');
+const router = require("express").Router();
+const Users = require("./user-model");
+const isAuthenticated = require("../auth/auth-middleware");
 
-// Create / update a guide account
-router.put('/:id', async (req, res) => {
-  const {
-    params: { id },
-    body,
-  } = req;
+// const multer = require("multer");
+// const upload = multer({ dest: "uploads" });
 
+// Get a user by id
+router.get("/userId", isAuthenticated, async (req, res) => {
+  const { uid } = req.user;
+  console.log("router uid: >>>>>", uid);
   try {
-    const guide = await User.findGuideById(id);
+    const user = await Users.findUserById(uid);
 
-    if (!guide) {
-      return res.status(404).json({ message: `User not found` });
-    }
-
-    await User.updateGuide(id, body);
-
-    const updatedGuide = await User.findGuideById(id).select(
-      'id',
-      'username',
-      'email',
-      'firstname',
-      'lastname',
-      'phonenumber',
-    );
-
-    res.status(200).json(updatedGuide);
-  } catch (err) {
-    res.status(500).json({ message: `Internal Server Error`, err });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ message: "User not found", error });
   }
 });
 
-// Get a guide by id
-router.get('/:id', async (req, res) => {
-  const {
-    params: { id },
-  } = req;
+// Update a user account
+router.put("/update/user", isAuthenticated, async (req, res) => {
+  const { uid } = req.user;
+  const userData = req.body;
+
+  console.log("uid in update>>>>", uid);
+  console.log("userData in update>>>>>", userData);
 
   try {
-    const guide = await User.findGuideById(id).select(
-      'id',
-      'username',
-      'email',
-      'firstname',
-      'lastname',
-      'phonenumber',
-    );
+    const user = await Users.findUserById(uid);
 
-    if (!guide) {
-      return res.status(404).json({ message: `User not found` });
+    if (!user) {
+      return res.status(400).json({ message: "Could not find user" });
     }
+    console.log("user in update>>>>", user);
+    const updatedUser = await Users.updateUser(uid, userData);
 
-    res.status(200).json(guide);
-  } catch (err) {
-    res.status(500).json({ message: `Internal Server Error`, err });
+    res.status(200).json({ message: "User successfully updated", updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 

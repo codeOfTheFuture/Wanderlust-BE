@@ -18,6 +18,10 @@ exports.up = function(knex) {
     guides.string('lastname', 255);
 
     guides.string('phonenumber');
+
+    guides.string('profilepicture', 255).unique();
+
+    guides.string('bannerpicture', 255).unique();
   });
 };
 

@@ -1,57 +1,42 @@
-exports.up = function(knex) {
-  return knex.schema.createTable('tours', tours => {
+exports.up = function (knex) {
+  return knex.schema.createTable("tours", (tours) => {
     tours.increments();
 
     tours
-      .integer('guide_id')
+      .string("user_id")
       .unsigned()
       .notNullable()
-      .references('id')
-      .inTable('guides')
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
+      .references("uid")
+      .inTable("users")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
 
-    tours
-      .integer('tourist_id')
-      .unsigned()
-      .notNullable()
-      .references('id')
-      .inTable('tourists');
+    tours.string("tourname", 255).notNullable();
 
-    tours.string('tourname', 255).notNullable();
+    tours.string("tourdescription", 255).notNullable();
 
-    tours.string('tourdescription', 255).notNullable();
+    tours.string("tourguidephonenumber", 255).notNullable();
 
-    tours
-      .string('tourguidephonenumber', 255)
-      .notNullable()
-      .unique();
+    tours.string("recommendedage", 255).notNullable();
 
-    tours.string('recommendedage', 255).notNullable();
+    tours.string("category", 255);
 
-    tours.string('whattobring', 255).notNullable();
+    tours.string("country", 255).notNullable();
 
-    tours.string('category', 255).notNullable();
+    tours.string("state", 255).notNullable();
 
-    tours.string('area', 255).notNullable();
+    tours.string("city", 255).notNullable();
 
-    tours
-      .integer('price')
-      .unsigned()
-      .notNullable();
+    tours.string("address", 255).notNullable();
 
-    tours
-      .integer('durationhrs')
-      .unsigned()
-      .notNullable();
+    tours.integer("price").unsigned().notNullable();
 
-    tours
-      .string('meetingaddress', 255)
-      .notNullable()
-      .unique();
+    tours.integer("durationhrs").unsigned().notNullable();
+
+    tours.string("meetingaddress", 255).notNullable();
   });
 };
 
-exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('tours');
+exports.down = function (knex) {
+  return knex.schema.dropTableIfExists("tours");
 };
