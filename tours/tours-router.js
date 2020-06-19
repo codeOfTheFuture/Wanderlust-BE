@@ -4,7 +4,7 @@ const isAuthenticated = require("../auth/auth-middleware");
 const Tours = require("../tours/tours-model");
 
 // Get all tours
-router.get("/", isAuthenticated, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     console.log("It's working");
     const tours = await Tours.find();
@@ -12,6 +12,19 @@ router.get("/", isAuthenticated, async (req, res) => {
     res.status(200).json(tours);
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error`, error });
+  }
+});
+
+// Get a tour by id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log("id: ", id);
+  try {
+    const tour = await Tours.findbyId(id);
+
+    res.status(200).json(tour);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 

@@ -15,25 +15,27 @@ exports.up = function (knex) {
 
     tours.string("tourdescription", 255).notNullable();
 
-    tours.string("tourguidephonenumber", 255).notNullable();
+    tours.string("tourguidephonenumber", 255);
 
     tours.string("recommendedage", 255).notNullable();
 
     tours.string("category", 255);
 
-    tours.string("country", 255).notNullable();
+    tours.string("country", 255);
 
-    tours.string("state", 255).notNullable();
+    tours.string("state", 255);
 
-    tours.string("city", 255).notNullable();
+    tours.string("city", 255);
 
-    tours.string("address", 255).notNullable();
+    tours.string("address", 255);
 
     tours.integer("price").unsigned().notNullable();
 
     tours.integer("durationhrs").unsigned().notNullable();
 
-    tours.string("meetingaddress", 255).notNullable();
+    tours.string("meetingaddress", 255);
+
+    tours.string("whattobring", 255);
   });
 };
 
