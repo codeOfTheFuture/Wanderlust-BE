@@ -3,6 +3,7 @@ const db = require("../config/dbConfig");
 module.exports = {
   find,
   findbyId,
+  getOfferedTours,
   add,
   addBookedTour,
 };
@@ -50,6 +51,11 @@ function findbyId(id) {
       "users.phone_number",
       "users.profilePhoto"
     );
+}
+
+// Find a guides offered tours
+function getOfferedTours(uid) {
+  return db("tours").where({ user_id: uid });
 }
 
 async function add(tour) {

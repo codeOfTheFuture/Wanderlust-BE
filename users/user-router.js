@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Users = require("./user-model");
+const Tours = require("../tours/tours-model");
 const isAuthenticated = require("../auth/auth-middleware");
 
 // const multer = require("multer");
@@ -15,6 +16,19 @@ router.get("/userId", isAuthenticated, async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ message: "User not found", error });
+  }
+});
+
+// Get a single guides tours
+router.get("/offered-tours", isAuthenticated, async (req, res) => {
+  const { uid } = req.user;
+  console.log("in the tour-router>>>>>>>: ");
+  try {
+    const tours = await Tours.getOfferedTours(uid);
+    console.log("single guide tours>>>>>: ", tours);
+    res.status(200).json(tours);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching the tours", error });
   }
 });
 
