@@ -9,7 +9,7 @@ const isAuthenticated = require("../auth/auth-middleware");
 // Get a user by id
 router.get("/userId", isAuthenticated, async (req, res) => {
   const { uid } = req.user;
-  console.log("router uid: >>>>>", uid);
+  // console.log("router uid: >>>>>", uid);
   try {
     const user = await Users.findUserById(uid);
 
@@ -22,10 +22,10 @@ router.get("/userId", isAuthenticated, async (req, res) => {
 // Get a single guides tours
 router.get("/offered-tours", isAuthenticated, async (req, res) => {
   const { uid } = req.user;
-  console.log("in the tour-router>>>>>>>: ");
+  // console.log("in the tour-router>>>>>>>: ");
   try {
     const tours = await Tours.getOfferedTours(uid);
-    console.log("single guide tours>>>>>: ", tours);
+    // console.log("single guide tours>>>>>: ", tours);
     res.status(200).json(tours);
   } catch (error) {
     res.status(500).json({ message: "Error fetching the tours", error });
@@ -39,13 +39,13 @@ router.put("/update/user", isAuthenticated, async (req, res) => {
 
   console.log("uid in update>>>>", uid);
   console.log("userData in update>>>>>", userData);
+  const user = Users.findUserById(uid);
+
+  if (!user) {
+    return res.status(400).json({ message: "Could not find user" });
+  }
 
   try {
-    const user = await Users.findUserById(uid);
-
-    if (!user) {
-      return res.status(400).json({ message: "Could not find user" });
-    }
     console.log("user in update>>>>", user);
     const updatedUser = await Users.updateUser(uid, userData);
 

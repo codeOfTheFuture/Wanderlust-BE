@@ -6,6 +6,8 @@ module.exports = {
   getOfferedTours,
   add,
   addBookedTour,
+  updateTourById,
+  deleteTour,
 };
 
 function find() {
@@ -59,22 +61,45 @@ function getOfferedTours(uid) {
 }
 
 async function add(tour) {
-  console.log("In the model", tour);
+  // console.log("In the model", tour);
   try {
     const [id] = await db("tours").insert(tour);
-    console.log("ID: ", id);
+    // console.log("ID: ", id);
     return await findbyId(id);
   } catch (error) {
     console.log("Add Tour model error: ", error);
   }
 }
 
+// Find a booked tour by id
 function findBookedTourById(id) {
   return db("bookedTours").where({ id }).first();
 }
 
+// Add a booked tour
 async function addBookedTour(bookedTour) {
-  const [id] = await db("bookedTours").insert(bookedTour);
+  try {
+    const [id] = await db("bookedTours").insert(bookedTour);
+    return await findBookedTourById(id);
+  } catch (error) {
+    return error;
+  }
+}
 
-  return await findBookedTourById(id);
+// Update a tour
+async function updateTourById(id, changes) {
+  console.log("update model id and changes >>", id, changes);
+
+  try {
+    await db("tours").where("id", Number(id)).update(changes);
+    console.log("update worked");
+    return await findBookedTourById(id);
+  } catch (error) {
+    return error;
+  }
+}
+
+// Delete a tour
+function deleteTour(id) {
+  return db("tours").where("id", Number(id)).del();
 }
