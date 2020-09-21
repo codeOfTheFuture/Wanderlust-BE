@@ -2,6 +2,7 @@ const router = require("express").Router();
 const isAuthenticated = require("../auth/auth-middleware");
 
 const Tours = require("../tours/tours-model");
+const { as } = require("../config/dbConfig");
 
 // Get all tours
 router.get("/", async (req, res) => {
@@ -42,6 +43,46 @@ router.post("/", isAuthenticated, async (req, res) => {
     res.status(201).json(addedTour);
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error`, error });
+  }
+});
+
+// Update a tour by id
+router.put("/:id", isAuthenticated, async (req, res) => {
+  const {
+      params: { id },
+    } = req,
+    changes = req.body;
+  console.log("Update params id >>>", id);
+  console.log("Update changes body >>>", changes);
+
+  try {
+    const tour = await Tours.findbyId(id);
+    console.log(tour);
+    if (tour) {
+      const updatedTour = await Tours.updateTourById(id, changes);
+      console.log("updated tour >>>>>>>", updatedTour);
+      res.status(200).json(updatedTour);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+});
+
+// Delete a tour by id
+router.delete("/:id", isAuthenticated, async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  const tour = Tours.findbyId(id);
+  if (!tour) {
+    return res.status(400).json({ message: "Tour not found" });
+  }
+  try {
+    const deleted = await Tours.deleteTour(id);
+    res.status(200).json({ message: "Tour successfully deleted", deleted });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 
