@@ -2,7 +2,6 @@ const router = require("express").Router();
 const isAuthenticated = require("../auth/auth-middleware");
 
 const Tours = require("../tours/tours-model");
-const { as } = require("../config/dbConfig");
 
 // Get all tours
 router.get("/", async (req, res) => {
@@ -70,17 +69,20 @@ router.put("/:id", isAuthenticated, async (req, res) => {
 });
 
 // Delete a tour by id
-router.delete("/:id", isAuthenticated, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const {
     params: { id },
   } = req;
-  const tour = Tours.findbyId(id);
-  if (!tour) {
-    return res.status(400).json({ message: "Tour not found" });
-  }
+
   try {
-    const deleted = await Tours.deleteTour(id);
-    res.status(200).json({ message: "Tour successfully deleted", deleted });
+    const tour = await Tours.findbyId(id);
+  } catch (error) {
+    res.status(404).json({ message: "tour not found" });
+  }
+
+  try {
+    await Tours.deleteTour(id);
+    res.status(200).json({ message: "Tour successfully deleted" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error });
   }
