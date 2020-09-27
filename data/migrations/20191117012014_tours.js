@@ -29,11 +29,17 @@ exports.up = function (knex) {
 
     tours.string("address", 255);
 
+    tours.integer("lat");
+
+    tours.integer("lng");
+
+    tours.integer("date");
+
     tours.integer("price").unsigned().notNullable();
 
     tours.integer("durationhrs").unsigned().notNullable();
 
-    tours.string("meetingaddress", 255);
+    tours.string("full_address", 255);
 
     tours.string("whattobring", 255);
   });
