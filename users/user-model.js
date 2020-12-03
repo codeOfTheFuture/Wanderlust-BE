@@ -2,7 +2,7 @@ const db = require("../config/dbConfig");
 
 module.exports = {
   addUser,
-  findUserById,
+  findUserByUid,
   updateUser,
   findTouristBy,
   addTourist,
@@ -12,21 +12,28 @@ module.exports = {
 
 // Add user to db
 async function addUser(user) {
+  // try {
+  //   const checkUser = await findUserById(user.uid);
+  //   if (checkUser) throw new Error();
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  console.log("user param from add user>>>", user);
   try {
-    const checkUser = await findUserById(user.uid);
-    if (checkUser) return checkUser;
-  } catch (error) {
-    console.log(error);
-  }
-
-  try {
-    const [uid] = await db("users").insert(user);
-    return await findUserById(uid).select(
+    await db("users").insert(user);
+    const fetchUser = await findUserByUid(user.uid).select(
       "isTourGuide",
-      "first_name",
-      "last_name",
-      "phone_number"
+      "firstName",
+      "lastName",
+      "phoneNumber",
+      "isRegistered",
+      "photoURL",
+      "displayName",
+      "creationTime",
+      "lastSignInTime"
     );
+    console.log("fetchUser>>>>>user-model", fetchUser);
+    return fetchUser;
   } catch (error) {
     console.log("Error>>>>>>>: ", error);
     return error;
@@ -34,7 +41,7 @@ async function addUser(user) {
 }
 
 // Find a single user by uid
-function findUserById(uid) {
+function findUserByUid(uid) {
   return db("users").where({ uid }).first();
 }
 

@@ -6,17 +6,23 @@ exports.up = function (knex) {
 
     users.boolean("isTourGuide");
 
-    users.string("first_name", 255);
+    users.boolean("rememberLogin").defaultTo(false);
 
-    users.string("last_name", 255);
+    users.string("firstName", 255);
 
-    users.integer("phone_number", 255);
+    users.string("lastName", 255);
+
+    users.integer("phoneNumber", 255);
 
     users.boolean("isRegistered");
 
-    users.string("profilePhoto", 500);
+    users.string("photoURL", 500);
 
     users.string("displayName", 255).unique();
+
+    users.string("creationTime", 255);
+
+    users.string("lastSignInTime", 255);
   });
 };
 
