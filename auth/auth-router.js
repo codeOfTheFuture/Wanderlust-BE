@@ -1,20 +1,34 @@
 const router = require("express").Router();
-const bcrypt = require("bcryptjs");
 const isAuthenticated = require("./auth-middleware");
-// const generateToken = require("./token");
 
 const Users = require("../users/user-model");
 
 // Register a new user
 router.post("/register", isAuthenticated, async (req, res) => {
   const { uid, email } = req.user;
-  console.log("uid: ", uid, "email: ", email);
+  const {
+    displayName,
+    phoneNumber,
+    photoURL,
+    creationTime,
+    lastSignInTime,
+  } = req.body.userInfo;
+
+  const newUser = {
+    uid,
+    email,
+    displayName,
+    phoneNumber,
+    photoURL,
+    creationTime,
+    lastSignInTime,
+  };
 
   try {
-    console.log("findUser: ");
-    const newUser = await Users.addUser({ uid: uid, email });
+    const result = await Users.addUser(newUser);
 
-    return res.status(201).json({ message: "User Created", newUser });
+    console.log("addUser: result>>", result);
+    return res.status(201).json(result);
     // }
   } catch (error) {
     return res.status(500).json(`Internal Server Error`, error);
@@ -30,10 +44,8 @@ router.post("/login", isAuthenticated, async (req, res) => {
   }
 
   try {
-    const user = await Users.findUserById(uid);
+    const user = await Users.findUserByUid(uid);
 
-    delete user.id;
-    console.log("working", user);
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).json({ message: `Internal Server Error`, err });

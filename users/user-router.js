@@ -11,7 +11,7 @@ router.get("/userId", isAuthenticated, async (req, res) => {
   const { uid } = req.user;
   // console.log("router uid: >>>>>", uid);
   try {
-    const user = await Users.findUserById(uid);
+    const user = await Users.findUserByUid(uid);
 
     res.status(200).json(user);
   } catch (error) {
@@ -39,7 +39,7 @@ router.put("/update/user", isAuthenticated, async (req, res) => {
 
   console.log("uid in update>>>>", uid);
   console.log("userData in update>>>>>", userData);
-  const user = Users.findUserById(uid);
+  const user = Users.findUserByUid(uid);
 
   if (!user) {
     return res.status(400).json({ message: "Could not find user" });
